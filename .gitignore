@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# External libs/dlls not being compiled at the moment
+!ext/glfw-3.4.bin.WIN64/lib-vc2022/*
