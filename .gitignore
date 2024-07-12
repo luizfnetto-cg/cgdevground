@@ -24,7 +24,7 @@
 *.lai
 *.la
 *.a
-*.lib
+*.li
 
 # Executables
 *.exe
@@ -429,3 +429,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+###########################
+# Git ignore exceptions
+!lib/**
