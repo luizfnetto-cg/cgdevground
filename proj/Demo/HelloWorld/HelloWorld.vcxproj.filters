@@ -22,4 +22,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\lib\GLFW\W11x64\Debug\glfw3.dll">
+      <Filter>DLLS</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
 </Project>
