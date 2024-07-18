@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGuiGLFWTemplate", "ImGuiGLFWTemplate\ImGuiGLFWTemplate.vcxproj", "{3494E05B-E74E-41A4-B85E-8EE3C050BAB0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFWTemplate", "GLFWTemplate\GLFWTemplate.vcxproj", "{709C098B-3E19-420A-BBD3-B60148A258F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{3494E05B-E74E-41A4-B85E-8EE3C050BAB0}.Release|x64.Build.0 = Release|x64
 		{3494E05B-E74E-41A4-B85E-8EE3C050BAB0}.Release|x86.ActiveCfg = Release|Win32
 		{3494E05B-E74E-41A4-B85E-8EE3C050BAB0}.Release|x86.Build.0 = Release|Win32
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Debug|x64.ActiveCfg = Debug|x64
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Debug|x64.Build.0 = Debug|x64
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Debug|x86.ActiveCfg = Debug|Win32
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Debug|x86.Build.0 = Debug|Win32
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Release|x64.ActiveCfg = Release|x64
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Release|x64.Build.0 = Release|x64
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Release|x86.ActiveCfg = Release|Win32
+		{709C098B-3E19-420A-BBD3-B60148A258F0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
