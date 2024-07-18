@@ -2,6 +2,12 @@
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_internal.h"
+
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,6 +56,27 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+void UpdateImGUIDpiScale()
+{
+	float MonitorScale = 1.f;
+	for (const ImGuiPlatformMonitor& Monitor : ImGui::GetPlatformIO().Monitors)
+	{
+		static const float BaseDPI = 96.f;
+		ImVec2 WinSize = Monitor.MainSize;
+
+		if (MonitorScale < Monitor.DpiScale)
+			MonitorScale = Monitor.DpiScale;
+
+		printf("List of monitors:\n");
+		printf("WxH: %dx%d DPI: %.2f (x%.2f)\n", (int) WinSize.x, (int) WinSize.y, BaseDPI * Monitor.DpiScale, Monitor.DpiScale);
+	}
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.ScaleAllSizes(MonitorScale);
+	ImGuiIO& io = ImGui::GetIO();
+	float FontSize = 13.f*MonitorScale;
+	io.Fonts->AddFontFromFileTTF("../resources/fonts/DejaVuSansMono.ttf", FontSize);
+}
+
 int main(void)
 {
 	glfwSetErrorCallback(error_callback);
@@ -61,7 +88,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Triangle", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1920, 1080, "OpenGL Triangle", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -69,11 +96,23 @@ int main(void)
 	}
 
 	glfwSetKeyCallback(window, key_callback);
-
 	glfwMakeContextCurrent(window);
 	gladLoadGL(glfwGetProcAddress);
-	glfwSwapInterval(1);
+	glfwSwapInterval(1); // Enable vsync
 
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	 // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	 // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		 // IF using Docking Branch
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplGlfw_InitForOpenGL(
+		window, true);	  // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+	ImGui_ImplOpenGL3_Init();
+	
 	// NOTE: OpenGL error checks have been omitted for brevity
 
 	GLuint vertex_buffer;
@@ -105,15 +144,24 @@ int main(void)
 	glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, pos));
 	glEnableVertexAttribArray(vcol_location);
 	glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, col));
+	
+	UpdateImGUIDpiScale();
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glfwPollEvents();
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::ShowDemoWindow();	// Show demo window! :)
+
 		int width, height;
 		glfwGetFramebufferSize(window, &width, &height);
 		const float ratio = width / (float) height;
 
 		glViewport(0, 0, width, height);
-		glClear(GL_COLOR_BUFFER_BIT);
 
 		glm::mat4 m(1);
 		glm::mat4 p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
@@ -125,9 +173,15 @@ int main(void)
 		glBindVertexArray(vertex_array);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwDestroyWindow(window);
 
